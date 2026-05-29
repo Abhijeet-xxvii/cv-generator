@@ -1,0 +1,114 @@
+/* preview.css — right preview pane */
+
+/* ── Shell ── */
+.preview {
+  background: var(--bg);
+  overflow-y: auto;
+  height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Toolbar ── */
+.ptool {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ptool-l {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ptool > span,
+.ptool-l > span {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* ── Template buttons ── */
+.tpl-btns {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.tpl-btn {
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.tpl-btn:hover {
+  color: var(--text);
+  border-color: var(--muted);
+}
+
+.tpl-btn.active {
+  background: var(--text);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* ── Export button ── */
+.bdl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  background: var(--text);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.bdl:hover {
+  opacity: 0.82;
+}
+
+.bdl i { font-size: 15px; }
+
+/* ── CV paper wrapper ── */
+.cv-wrap {
+  width: 700px;
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  color: #1a1a1a;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  background: #ffffff;
+}
+
+/* ── Empty state ── */
+.cv-placeholder {
+  font-size: 13px;
+  color: #ccc;
+  padding: 1.5rem 0;
+  font-style: italic;
+}

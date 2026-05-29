@@ -1,0 +1,251 @@
+/* panel.css — left editor panel */
+
+/* ── Shell ── */
+/* FIX: Panel is a fixed-height flex column. overflow-y is removed from the
+   shell itself — only the .sec content area scrolls. This keeps .panel-top
+   and .tabs permanently pinned so they can never be scrolled under. */
+.panel {
+  background: var(--panel-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;        /* shell must NOT scroll — children handle it */
+}
+
+.panel-top {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;          /* never shrink — always fully visible */
+  background: var(--panel-bg);
+  z-index: 20;
+}
+
+.panel-top h1 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.panel-top p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 3px;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-bg);
+  flex-shrink: 0;          /* never shrink — always fully visible */
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+  z-index: 19;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  color: var(--muted);
+  background: none;
+  transition: all 0.15s;
+}
+
+.tab:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.tab.active {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* ── Sections ── */
+/* FIX: .sec is the ONLY scrolling region in the panel. It takes all
+   remaining vertical space (flex:1) and scrolls independently, so
+   header and tabs are always anchored at the top. */
+.sec {
+  display: none;
+  padding: 1.25rem 1.5rem;
+  flex: 1;
+  overflow-y: auto;        /* scroll happens here, not on .panel */
+  min-height: 0;           /* required for flex children to respect overflow */
+}
+
+.sec.active {
+  display: block;
+}
+
+/* ── Group labels & separators ── */
+.sgtt {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 0.65rem;
+}
+
+.sgsep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.25rem 0 1rem;
+}
+
+/* ── Form fields ── */
+.fl {
+  margin-bottom: 0.85rem;
+}
+
+.fl label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fl input,
+.fl textarea,
+.fl select {
+  width: 100%;
+  font-size: 13.5px;
+  padding: 7px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s;
+  resize: vertical;
+  outline: none;
+}
+
+.fl input:focus,
+.fl textarea:focus,
+.fl select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.fl textarea {
+  min-height: 72px;
+  line-height: 1.55;
+}
+
+.fl input[type="range"] {
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  accent-color: var(--accent);
+}
+
+/* ── Two-column field row ── */
+.r2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ── Entry blocks (experience, education, etc.) ── */
+.eblk {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.875rem;
+  margin-bottom: 0.6rem;
+}
+
+.eblk-hd {
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text);
+}
+
+.bico {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  padding: 3px 5px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.bico:hover {
+  color: #e94560;
+  background: #fef2f4;
+}
+
+/* ── Add entry button ── */
+.badd {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  background: none;
+  font-size: 12.5px;
+  color: var(--muted);
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.4rem;
+  transition: all 0.15s;
+}
+
+.badd:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+/* ── Color picker ── */
+.color-pick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.tdot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  transition: all 0.15s;
+  outline: none;
+}
+
+.tdot:hover {
+  transform: scale(1.15);
+}
+
+.tdot.sel {
+  border-color: var(--text);
+  transform: scale(1.1);
+}

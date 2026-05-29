@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV Builder</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600&family=Lato:ital,wght@0,300;0,400;0,700;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/panel.css" />
+  <link rel="stylesheet" href="css/preview.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── LEFT PANEL ── -->
+  <aside class="panel">
+    <div class="panel-top">
+      <h1>CV Builder</h1>
+      <p>4 templates · live preview · export ready</p>
+    </div>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="basics">Basics</button>
+      <button class="tab" data-tab="exp">Experience</button>
+      <button class="tab" data-tab="edu">Education</button>
+      <button class="tab" data-tab="skills">Skills</button>
+      <button class="tab" data-tab="extras">Extras</button>
+      <button class="tab" data-tab="style">Style</button>
+    </nav>
+
+    <!-- BASICS -->
+    <section id="tab-basics" class="sec active">
+      <p class="sgtt">Personal</p>
+      <div class="fl"><label>Full name</label><input id="f-name" placeholder="Alex Rivera" /></div>
+      <div class="fl"><label>Job title</label><input id="f-title" placeholder="Senior UX Designer" /></div>
+      <div class="fl"><label>Summary</label><textarea id="f-summary" placeholder="Passionate designer with 8+ years crafting user-centered products..."></textarea></div>
+      <hr class="sgsep" />
+      <p class="sgtt">Contact</p>
+      <div class="r2">
+        <div class="fl"><label>Email</label><input id="f-email" placeholder="alex@email.com" /></div>
+        <div class="fl"><label>Phone</label><input id="f-phone" placeholder="+1 555 000 0000" /></div>
+      </div>
+      <div class="r2">
+        <div class="fl"><label>Location</label><input id="f-location" placeholder="New York, USA" /></div>
+        <div class="fl"><label>Website</label><input id="f-website" placeholder="alexrivera.co" /></div>
+      </div>
+      <div class="r2">
+        <div class="fl"><label>LinkedIn</label><input id="f-li" placeholder="linkedin.com/in/alex" /></div>
+        <div class="fl"><label>GitHub</label><input id="f-gh" placeholder="github.com/alex" /></div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="tab-exp" class="sec">
+      <div id="exp-list"></div>
+      <button class="badd" data-type="exp"><i class="ti ti-plus"></i> Add experience</button>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="tab-edu" class="sec">
+      <div id="edu-list"></div>
+      <button class="badd" data-type="edu"><i class="ti ti-plus"></i> Add education</button>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="tab-skills" class="sec">
+      <p class="sgtt">Skills</p>
+      <div id="skill-list"></div>
+      <button class="badd" data-type="skill"><i class="ti ti-plus"></i> Add skill</button>
+      <hr class="sgsep" />
+      <p class="sgtt">Languages</p>
+      <div id="lang-list"></div>
+      <button class="badd" data-type="lang"><i class="ti ti-plus"></i> Add language</button>
+    </section>
+
+    <!-- EXTRAS -->
+    <section id="tab-extras" class="sec">
+      <p class="sgtt">Certifications</p>
+      <div id="cert-list"></div>
+      <button class="badd" data-type="cert"><i class="ti ti-plus"></i> Add certification</button>
+      <hr class="sgsep" />
+      <p class="sgtt">Projects</p>
+      <div id="proj-list"></div>
+      <button class="badd" data-type="proj"><i class="ti ti-plus"></i> Add project</button>
+    </section>
+
+    <!-- STYLE -->
+    <section id="tab-style" class="sec">
+      <div class="fl">
+        <label>Accent color</label>
+        <div class="color-pick" id="color-pick">
+          <div class="tdot sel" style="background:#e94560" data-c="#e94560" data-d="#1a1a2e"></div>
+          <div class="tdot" style="background:#2563eb" data-c="#2563eb" data-d="#1e3a8a"></div>
+          <div class="tdot" style="background:#059669" data-c="#059669" data-d="#064e3b"></div>
+          <div class="tdot" style="background:#7c3aed" data-c="#7c3aed" data-d="#3b0764"></div>
+          <div class="tdot" style="background:#ea580c" data-c="#ea580c" data-d="#431407"></div>
+          <div class="tdot" style="background:#0891b2" data-c="#0891b2" data-d="#164e63"></div>
+          <div class="tdot" style="background:#be185d" data-c="#be185d" data-d="#500724"></div>
+          <div class="tdot" style="background:#475569" data-c="#475569" data-d="#0f172a"></div>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <!-- ── RIGHT PREVIEW ── -->
+  <main class="preview">
+    <div class="ptool">
+      <div class="ptool-l">
+        <span><i class="ti ti-layout-grid" aria-hidden="true"></i> Template:</span>
+        <div class="tpl-btns">
+          <button class="tpl-btn active" data-tpl="classic">Classic</button>
+          <button class="tpl-btn" data-tpl="sidebar">Sidebar</button>
+          <button class="tpl-btn" data-tpl="minimal">Minimal</button>
+          <button class="tpl-btn" data-tpl="bold">Bold</button>
+        </div>
+      </div>
+      <button class="bdl" id="export-btn">
+        <i class="ti ti-download"></i> Export HTML
+      </button>
+    </div>
+
+    <div class="cv-wrap" id="cv-wrap"></div>
+  </main>
+
+</div>
+
+<!-- Scripts -->
+<script src="js/state.js"></script>
+<script src="js/lists.js"></script>
+<script src="js/utils.js"></script>
+<script src="templates/classic.js"></script>
+<script src="templates/sidebar.js"></script>
+<script src="templates/minimal.js"></script>
+<script src="templates/bold.js"></script>
+<script src="js/render.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
