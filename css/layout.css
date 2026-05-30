@@ -1,8 +1,144 @@
-/* layout.css — top-level app grid */
+/* layout.css — top-level app grid + mobile breakpoints */
+
+/* ── Root height chain ──────────────────────────────────────
+   html/body must be 100% so 100vh on children is reliable.
+   .app is the grid — both columns get full viewport height.
+   overflow:hidden on .app is REMOVED; each column manages its
+   own scroll so nothing gets clipped at the grid level.       */
+html, body {
+  height: 100%;
+}
 
 .app {
   display: grid;
   grid-template-columns: 370px 1fr;
   height: 100vh;
-  overflow: hidden;
+  /* NO overflow:hidden here — that was clipping both columns */
+}
+
+/* ── Mobile header (hidden on desktop) ── */
+.mob-header {
+  display: none;
+}
+
+.mob-back-btn {
+  display: none;
+}
+
+/* ── Mobile: ≤ 768px ── */
+@media (max-width: 768px) {
+
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: 52px 1fr;
+    height: 100dvh;
+  }
+
+  /* Mobile top bar */
+  .mob-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .mob-title {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text);
+  }
+
+  .mob-menu-btn,
+  .mob-preview-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text);
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+  }
+
+  .mob-menu-btn:hover,
+  .mob-preview-btn:hover {
+    background: var(--surface);
+  }
+
+  /* Panel slides in as an overlay */
+  .panel {
+    position: fixed;
+    inset: 52px 0 0 0;
+    z-index: 90;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    height: calc(100dvh - 52px);
+    border-right: none;
+  }
+
+  /* Preview sits below the mobile header */
+  .preview {
+    grid-column: 1;
+    grid-row: 2;
+    height: calc(100dvh - 52px);
+    padding: 1rem;
+  }
+
+  .mob-close-btn {
+    display: flex !important;
+  }
+
+  .mob-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 5px 12px;
+    margin-bottom: 0.75rem;
+    align-self: flex-start;
+  }
+
+  .app[data-mview="editor"] .panel {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  }
+
+  .ptool-l > span { display: none; }
+
+  .ptool {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .tpl-btn {
+    padding: 4px 9px;
+    font-size: 11px;
+  }
+
+  .bdl {
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+
+  .cv-wrap {
+    width: 100%;
+  }
+}
+
+/* ── Very small screens ── */
+@media (max-width: 400px) {
+  .tpl-btns { gap: 3px; }
+  .tpl-btn  { padding: 4px 7px; font-size: 10.5px; }
 }

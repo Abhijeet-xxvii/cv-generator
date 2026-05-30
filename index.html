@@ -13,6 +13,12 @@
   <!-- Tabler Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
 
+  <!-- html2pdf (PDF export) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- docx.js (DOCX export) -->
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/layout.css" />
@@ -21,13 +27,31 @@
 </head>
 <body>
 
-<div class="app">
+<div class="app" id="app">
+
+  <!-- ── MOBILE HEADER (hidden on desktop) ── -->
+  <header class="mob-header" id="mob-header">
+    <button class="mob-menu-btn" id="mob-menu-btn" aria-label="Toggle editor">
+      <i class="ti ti-layout-sidebar"></i>
+    </button>
+    <span class="mob-title">CV Builder</span>
+    <button class="mob-preview-btn" id="mob-preview-btn" aria-label="Preview">
+      <i class="ti ti-eye"></i>
+    </button>
+  </header>
 
   <!-- ── LEFT PANEL ── -->
-  <aside class="panel">
+  <aside class="panel" id="panel">
     <div class="panel-top">
-      <h1>CV Builder</h1>
-      <p>4 templates · live preview · export ready</p>
+      <div class="panel-top-row">
+        <div>
+          <h1>CV Builder</h1>
+          <p id="save-status">4 templates · live preview · export ready</p>
+        </div>
+        <button class="mob-close-btn" id="mob-close-btn" aria-label="Close editor">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
     </div>
 
     <nav class="tabs" id="tabs">
@@ -37,10 +61,30 @@
       <button class="tab" data-tab="skills">Skills</button>
       <button class="tab" data-tab="extras">Extras</button>
       <button class="tab" data-tab="style">Style</button>
+      <button class="tab" data-tab="ats">ATS</button>
     </nav>
 
     <!-- BASICS -->
     <section id="tab-basics" class="sec active">
+      <!-- Photo Upload -->
+      <p class="sgtt">Profile Photo <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></p>
+      <div class="photo-upload-area" id="photo-upload-area">
+        <div class="photo-preview" id="photo-preview">
+          <i class="ti ti-user" style="font-size:28px;color:var(--muted)"></i>
+        </div>
+        <div class="photo-upload-text">
+          <label class="photo-upload-btn" for="photo-input">
+            <i class="ti ti-upload"></i> Upload photo
+          </label>
+          <input type="file" id="photo-input" accept="image/*" style="display:none" />
+          <button class="photo-remove-btn" id="photo-remove-btn" style="display:none">
+            <i class="ti ti-trash"></i> Remove
+          </button>
+          <p class="photo-hint">JPG, PNG or WebP · shown only in templates that support it</p>
+        </div>
+      </div>
+      <hr class="sgsep" />
+
       <p class="sgtt">Personal</p>
       <div class="fl"><label>Full name</label><input id="f-name" placeholder="Alex Rivera" /></div>
       <div class="fl"><label>Job title</label><input id="f-title" placeholder="Senior UX Designer" /></div>
@@ -111,10 +155,29 @@
         </div>
       </div>
     </section>
+
+    <!-- ATS -->
+    <section id="tab-ats" class="sec">
+      <div class="ats-header">
+        <div class="ats-score-ring" id="ats-ring">
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="#eee" stroke-width="8"/><circle id="ats-arc" cx="40" cy="40" r="34" fill="none" stroke="#e94560" stroke-width="8" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6" transform="rotate(-90 40 40)"/></svg>
+          <span id="ats-score-num">0</span>
+        </div>
+        <div class="ats-score-label">
+          <strong id="ats-score-title">ATS Score</strong>
+          <p id="ats-score-sub">Fill in your CV to see your score</p>
+        </div>
+      </div>
+      <div id="ats-tips"></div>
+      <button class="badd" id="ats-refresh-btn" style="margin-top:0.5rem">
+        <i class="ti ti-refresh"></i> Re-analyze
+      </button>
+    </section>
+
   </aside>
 
   <!-- ── RIGHT PREVIEW ── -->
-  <main class="preview">
+  <main class="preview" id="preview">
     <div class="ptool">
       <div class="ptool-l">
         <span><i class="ti ti-layout-grid" aria-hidden="true"></i> Template:</span>
@@ -125,10 +188,23 @@
           <button class="tpl-btn" data-tpl="bold">Bold</button>
         </div>
       </div>
-      <button class="bdl" id="export-btn">
-        <i class="ti ti-download"></i> Export HTML
-      </button>
+      <!-- Export dropdown -->
+      <div class="export-wrap" id="export-wrap">
+        <button class="bdl" id="export-btn">
+          <i class="ti ti-download"></i> Export <i class="ti ti-chevron-down" style="font-size:12px;margin-left:2px"></i>
+        </button>
+        <div class="export-menu" id="export-menu">
+          <button class="export-opt" data-fmt="html"><i class="ti ti-brand-html5"></i> HTML file</button>
+          <button class="export-opt" data-fmt="pdf"><i class="ti ti-file-type-pdf"></i> PDF</button>
+          <button class="export-opt" data-fmt="docx"><i class="ti ti-file-type-doc"></i> Word (.docx)</button>
+        </div>
+      </div>
     </div>
+
+    <!-- Mobile back button (shown on preview-only mode) -->
+    <button class="mob-back-btn" id="mob-back-btn">
+      <i class="ti ti-arrow-left"></i> Back to editor
+    </button>
 
     <div class="cv-wrap" id="cv-wrap"></div>
   </main>
@@ -145,6 +221,7 @@
 <script src="templates/bold.js"></script>
 <script src="js/render.js"></script>
 <script src="js/export.js"></script>
+<script src="js/ats.js"></script>
 <script src="js/app.js"></script>
 
 </body>

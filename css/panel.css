@@ -1,24 +1,32 @@
 /* panel.css — left editor panel */
 
-/* ── Shell ── */
-/* FIX: Panel is a fixed-height flex column. overflow-y is removed from the
-   shell itself — only the .sec content area scrolls. This keeps .panel-top
-   and .tabs permanently pinned so they can never be scrolled under. */
+/* ── Shell ──────────────────────────────────────────────────
+   .panel is a flex column that fills the full viewport height.
+   overflow:hidden on the shell keeps panel-top and tabs pinned.
+   Only .sec (the content area) scrolls.                       */
 .panel {
   background: var(--panel-bg);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;        /* shell must NOT scroll — children handle it */
+  height: 100vh;          /* fill the grid cell */
+  overflow: hidden;       /* clip — children scroll themselves */
 }
 
+/* ── Header ── */
 .panel-top {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  flex-shrink: 0;          /* never shrink — always fully visible */
+  flex-shrink: 0;         /* never shrink — always pinned */
   background: var(--panel-bg);
   z-index: 20;
+}
+
+.panel-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .panel-top h1 {
@@ -34,6 +42,22 @@
   margin-top: 3px;
 }
 
+/* Mobile close button — hidden on desktop */
+.mob-close-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--muted);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mob-close-btn:hover { color: var(--text); }
+
 /* ── Tabs ── */
 .tabs {
   display: flex;
@@ -41,7 +65,7 @@
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
   background: var(--panel-bg);
-  flex-shrink: 0;          /* never shrink — always fully visible */
+  flex-shrink: 0;         /* never shrink — always pinned */
   overflow-x: auto;
   flex-wrap: nowrap;
   scrollbar-width: none;
@@ -62,10 +86,7 @@
   transition: all 0.15s;
 }
 
-.tab:hover {
-  color: var(--text);
-  background: var(--surface);
-}
+.tab:hover  { color: var(--text); background: var(--surface); }
 
 .tab.active {
   background: var(--surface);
@@ -74,21 +95,23 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-/* ── Sections ── */
-/* FIX: .sec is the ONLY scrolling region in the panel. It takes all
-   remaining vertical space (flex:1) and scrolls independently, so
-   header and tabs are always anchored at the top. */
+/* ── Sections ────────────────────────────────────────────────
+   KEY FIX: .sec must be the one and only scroll region inside
+   the panel. Three rules make this work together:
+     1. overflow-y: auto   — enables scrolling
+     2. flex: 1            — take all remaining height
+     3. min-height: 0      — flex items default to min-height:auto
+                             which ignores overflow; 0 forces the
+                             browser to respect the overflow rule  */
 .sec {
   display: none;
   padding: 1.25rem 1.5rem;
   flex: 1;
-  overflow-y: auto;        /* scroll happens here, not on .panel */
-  min-height: 0;           /* required for flex children to respect overflow */
+  overflow-y: auto;
+  min-height: 0;          /* CRITICAL — without this flex ignores overflow */
 }
 
-.sec.active {
-  display: block;
-}
+.sec.active { display: block; } /* block is correct — flex:1 + min-height:0 on .sec handle the scroll */
 
 /* ── Group labels & separators ── */
 .sgtt {
@@ -107,9 +130,7 @@
 }
 
 /* ── Form fields ── */
-.fl {
-  margin-bottom: 0.85rem;
-}
+.fl { margin-bottom: 0.85rem; }
 
 .fl label {
   font-size: 11px;
@@ -143,17 +164,11 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
-.fl textarea {
-  min-height: 72px;
-  line-height: 1.55;
-}
+.fl textarea { min-height: 72px; line-height: 1.55; }
 
 .fl input[type="range"] {
-  padding: 0;
-  border: none;
-  background: none;
-  box-shadow: none;
-  accent-color: var(--accent);
+  padding: 0; border: none; background: none;
+  box-shadow: none; accent-color: var(--accent);
 }
 
 /* ── Two-column field row ── */
@@ -163,7 +178,7 @@
   gap: 10px;
 }
 
-/* ── Entry blocks (experience, education, etc.) ── */
+/* ── Entry blocks ── */
 .eblk {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -195,10 +210,7 @@
   line-height: 1;
 }
 
-.bico:hover {
-  color: #e94560;
-  background: #fef2f4;
-}
+.bico:hover { color: #e94560; background: #fef2f4; }
 
 /* ── Add entry button ── */
 .badd {
@@ -224,28 +236,150 @@
 }
 
 /* ── Color picker ── */
-.color-pick {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 4px;
-}
+.color-pick { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 
 .tdot {
-  width: 26px;
-  height: 26px;
+  width: 26px; height: 26px; border-radius: 50%;
+  cursor: pointer; border: 2.5px solid transparent;
+  transition: all 0.15s; outline: none;
+}
+
+.tdot:hover { transform: scale(1.15); }
+.tdot.sel   { border-color: var(--text); transform: scale(1.1); }
+
+/* ── Photo upload ── */
+.photo-upload-area {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 0.85rem;
+}
+
+.photo-preview {
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+
+.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.photo-upload-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.photo-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: var(--radius-md);
+  padding: 5px 11px;
   cursor: pointer;
-  border: 2.5px solid transparent;
   transition: all 0.15s;
-  outline: none;
+  font-family: var(--font-sans);
 }
 
-.tdot:hover {
-  transform: scale(1.15);
+.photo-upload-btn:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
-.tdot.sel {
-  border-color: var(--text);
-  transform: scale(1.1);
+.photo-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: color 0.15s;
 }
+
+.photo-remove-btn:hover { color: #e94560; }
+
+.photo-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ── ATS panel ── */
+.ats-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.ats-score-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.ats-score-ring svg { width: 80px; height: 80px; }
+
+#ats-arc {
+  transition: stroke-dashoffset 0.7s ease, stroke 0.4s ease;
+}
+
+.ats-score-ring span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.ats-score-label strong {
+  font-size: 14px;
+  color: var(--text);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.ats-score-label p { font-size: 12px; color: var(--muted); }
+
+.ats-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: var(--radius-md);
+  margin-bottom: 7px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.ats-tip-good  { border-color: #bbf7d0; background: #f0fdf4; }
+.ats-tip-info  { border-color: #bae6fd; background: #f0f9ff; }
+.ats-tip-warn  { border-color: #fed7aa; background: #fff7ed; }
+.ats-tip-error { border-color: #fecaca; background: #fff1f2; }

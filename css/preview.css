@@ -1,10 +1,14 @@
 /* preview.css — right preview pane */
 
-/* ── Shell ── */
+/* ── Shell ──────────────────────────────────────────────────
+   KEY FIX: height must be 100vh so the element has a definite
+   size to scroll within. overflow-y:auto then works correctly.
+   Without a definite height the browser can't know when to
+   start scrolling, so it just expands the element instead.    */
 .preview {
   background: var(--bg);
-  overflow-y: auto;
-  height: 100vh;
+  height: 100vh;           /* definite height — required for scroll */
+  overflow-y: auto;        /* scroll within that height */
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -21,6 +25,7 @@
   margin-bottom: 1rem;
   flex-wrap: wrap;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .ptool-l {
@@ -60,10 +65,7 @@
   white-space: nowrap;
 }
 
-.tpl-btn:hover {
-  color: var(--text);
-  border-color: var(--muted);
-}
+.tpl-btn:hover { color: var(--text); border-color: var(--muted); }
 
 .tpl-btn.active {
   background: var(--text);
@@ -71,7 +73,11 @@
   border-color: transparent;
 }
 
-/* ── Export button ── */
+/* ── Export dropdown ── */
+.export-wrap {
+  position: relative;
+}
+
 .bdl {
   display: flex;
   align-items: center;
@@ -87,11 +93,43 @@
   white-space: nowrap;
 }
 
-.bdl:hover {
-  opacity: 0.82;
+.bdl:hover    { opacity: 0.82; }
+.bdl:disabled { opacity: 0.6; cursor: wait; }
+.bdl i        { font-size: 15px; }
+
+.export-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 170px;
+  z-index: 50;
+  overflow: hidden;
+  display: none;
 }
 
-.bdl i { font-size: 15px; }
+.export-menu.open { display: block; }
+
+.export-opt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 14px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  transition: background 0.12s;
+  font-family: var(--font-sans);
+}
+
+.export-opt:hover { background: var(--bg); }
+.export-opt i     { font-size: 16px; color: var(--muted); }
 
 /* ── CV paper wrapper ── */
 .cv-wrap {
@@ -103,6 +141,7 @@
   color: #1a1a1a;
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   background: #ffffff;
+  flex-shrink: 0;          /* don't compress the CV card */
 }
 
 /* ── Empty state ── */
@@ -112,3 +151,9 @@
   padding: 1.5rem 0;
   font-style: italic;
 }
+
+/* ── Spinner for PDF export ── */
+@keyframes ti-spin {
+  to { transform: rotate(360deg); }
+}
+.ti-spin { display: inline-block; animation: ti-spin 0.8s linear infinite; }

@@ -1,4 +1,4 @@
-// templates/sidebar.js — full-height dark sidebar, avatar, horizontal-rule sections
+// templates/sidebar.js — full-height dark sidebar, avatar/photo, horizontal-rule sections
 
 function tplSidebar(D) {
   const { accent, dark } = State;
@@ -7,21 +7,27 @@ function tplSidebar(D) {
   // ── Sidebar ─────────────────────────────────────────────
   let sidebar = `
     <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin:0 auto 12px;border:2px solid rgba(255,255,255,.35)">
-        ${initial}
-      </div>
+      ${State.photo
+        ? `<img src="${State.photo}" alt="Profile photo"
+              style="width:80px;height:80px;object-fit:cover;border-radius:50%;
+                     border:2px solid rgba(255,255,255,.35);margin:0 auto 12px;display:block" />`
+        : `<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.18);
+                display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;
+                font-size:28px;font-weight:700;color:#fff;margin:0 auto 12px;border:2px solid rgba(255,255,255,.35)">
+              ${initial}
+           </div>`
+      }
       <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;line-height:1.2">${esc(D.name) || 'Your Name'}</div>
       <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:6px;letter-spacing:1px;text-transform:uppercase">${esc(D.title) || 'Title'}</div>
     </div>`;
 
-  // Contact
   const contactItems = [
     D.email    && `<i class="ti ti-mail"           style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.email)}`,
     D.phone    && `<i class="ti ti-phone"          style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.phone)}`,
     D.location && `<i class="ti ti-map-pin"        style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.location)}`,
     D.website  && `<i class="ti ti-world"          style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.website)}`,
     D.linkedin && `<i class="ti ti-brand-linkedin" style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.linkedin)}`,
-    D.github   && `<i class="ti ti-brand-github"  style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.github)}`,
+    D.github   && `<i class="ti ti-brand-github"   style="font-size:13px;color:${accent}" aria-hidden="true"></i>${esc(D.github)}`,
   ].filter(Boolean);
 
   if (contactItems.length) {

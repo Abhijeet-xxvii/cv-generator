@@ -3,7 +3,6 @@
 function tplClassic(D) {
   const { accent, dark } = State;
 
-  // Contact chips for header
   const contacts = [
     contactChip('mail',           D.email,    '#ccc'),
     contactChip('phone',          D.phone,    '#ccc'),
@@ -13,7 +12,13 @@ function tplClassic(D) {
     contactChip('brand-github',   D.github,   '#ccc'),
   ].filter(Boolean).join('');
 
-  // Main column
+  // Photo in header (if provided)
+  const photo = State.photo
+    ? `<img src="${State.photo}" alt="Profile photo"
+        style="width:80px;height:80px;object-fit:cover;border-radius:50%;
+               border:2.5px solid rgba(255,255,255,.3);flex-shrink:0" />`
+    : '';
+
   let main = '';
 
   if (D.summary) {
@@ -54,7 +59,6 @@ function tplClassic(D) {
     </div>`;
   }
 
-  // Aside column
   let aside = '';
 
   if (State.skills.length) {
@@ -87,11 +91,16 @@ function tplClassic(D) {
     <div style="background:#fff;font-family:'Lato',sans-serif;color:#1a1a1a">
       <!-- Header -->
       <div style="background:${dark};padding:2.5rem 2.5rem 1.75rem">
-        <div style="font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:-0.5px;line-height:1.1">
-          ${esc(D.name) || 'Your Name'}
-        </div>
-        <div style="font-size:12.5px;color:rgba(255,255,255,.55);margin-top:6px;letter-spacing:1.5px;text-transform:uppercase;font-weight:300">
-          ${esc(D.title) || 'Your Title'}
+        <div style="display:flex;align-items:center;gap:20px">
+          ${photo}
+          <div style="flex:1">
+            <div style="font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:-0.5px;line-height:1.1">
+              ${esc(D.name) || 'Your Name'}
+            </div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,.55);margin-top:6px;letter-spacing:1.5px;text-transform:uppercase;font-weight:300">
+              ${esc(D.title) || 'Your Title'}
+            </div>
+          </div>
         </div>
         ${contacts ? `<div style="margin-top:16px;display:flex;flex-wrap:wrap">${contacts}</div>` : ''}
       </div>

@@ -57,6 +57,13 @@ function skillPill(skill, accent) {
   return `<span style="font-size:11.5px;padding:4px 10px;background:${accent}18;color:${accent};border-radius:20px;border:0.5px solid ${accent}44;display:inline-block;margin:0 4px 5px 0">${esc(skill.name || 'Skill')}</span>`;
 }
 
+/** Profile photo helper — returns <img> or empty string */
+function photoImg(size, style) {
+  if (!State.photo) return '';
+  return `<img src="${State.photo}" alt="Profile photo"
+    style="width:${size}px;height:${size}px;object-fit:cover;border-radius:50%;${style || ''}" />`;
+}
+
 /** Experience block shared across templates */
 function expBlock(entry, opts = {}) {
   const {
@@ -83,12 +90,10 @@ function expBlock(entry, opts = {}) {
 
 // ── Section heading styles ─────────────────────────────────
 
-/** Classic: colored text + bottom border */
 function shClassic(label, accent) {
   return `<div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:${accent};border-bottom:1.5px solid ${accent};padding-bottom:5px;margin-bottom:12px">${label}</div>`;
 }
 
-/** Sidebar: text + horizontal rule */
 function shLine(label, accent) {
   return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
     <span style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:${accent};white-space:nowrap">${label}</span>
@@ -96,17 +101,14 @@ function shLine(label, accent) {
   </div>`;
 }
 
-/** Minimal: left border accent */
 function shLeft(label, accent) {
   return `<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accent};padding-left:10px;border-left:3px solid ${accent};margin-bottom:12px">${label}</div>`;
 }
 
-/** Bold: small label, no decoration */
 function shBold(label, accent) {
   return `<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:10px">${label}</div>`;
 }
 
-/** Placeholder shown when CV is empty */
 function placeholder() {
   return `<p class="cv-placeholder">Start filling in your details to see your CV take shape.</p>`;
 }
